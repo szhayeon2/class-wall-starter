@@ -113,14 +113,19 @@ function makeMemo(memo) {
 const input = document.getElementById("input");
 
 input.addEventListener("keydown", async function (e) {
+  // 한글 입력 중(조합 중) 엔터를 눌렀을 때 두 번 실행되는 현상을 막습니다.
+  if (e.isComposing) return;
+
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
 
     const text = input.value.trim();
     if (text === "") return;
 
-    await addMemo(text);
+    // 중복 입력을 방지하기 위해 입력창을 먼저 비웁니다.
     input.value = "";
+
+    await addMemo(text);
     await render();
   }
 });
